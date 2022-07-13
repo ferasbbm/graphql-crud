@@ -1,0 +1,22 @@
+extend type Query {
+   "Get specific task using id."
+    task(
+        "Search by primary key."
+        id: ID @eq
+    ):Task @find
+
+    "List multiple tasks."
+    tasks: [Task!]! @all
+
+}
+
+type Task {
+    id: ID!
+    title: String!
+    description: String!
+    user: User! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+
