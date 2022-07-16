@@ -1,5 +1,5 @@
 extend type Query {
-   "Get specific task using id."
+    "Get specific task using id."
     task(
         "Search by primary key."
         id: ID @eq
@@ -7,6 +7,9 @@ extend type Query {
 
     "List multiple tasks."
     tasks: [Task!]! @all
+
+    "List multiple tasks."
+    tasksWithPagination: [Task!]! @paginate
 
 }
 
@@ -20,3 +23,20 @@ type Task {
 }
 
 
+extend type Mutation {
+    createTask(input: CrateInputs! @spread): Task @create
+    updateTask(input: UpdateInputs! @spread): Task @update
+    deleteTask(id: ID! @rules(apply: ["required","exists:tasks,id"])): Task @delete
+}
+
+input CrateInputs{
+    title: String!, @rules(apply: ["required","string","min:3"])
+    description: String
+    user_id: Int! @rules(apply: ["required","numeric","exists:users,id"])
+}
+
+input UpdateInputs{
+    id: ID!, @rules(apply: ["required","exists:tasks,id"])
+    title: String!, @rules(apply: ["required","string","min:3"])
+    description: String
+}
